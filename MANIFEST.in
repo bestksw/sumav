@@ -1,0 +1,2 @@
+recursive-include sumav schema.sql
+recursive-include sumav/preprocessing/tests *

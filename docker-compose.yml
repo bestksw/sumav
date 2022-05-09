@@ -1,0 +1,33 @@
+version: "2.1"
+services:
+  sumav:
+    # build: .
+    image: bestksw/sumav:1.0.1
+    restart: always
+    networks:
+      - sumav-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - PSQL_HOST=postgres
+      - VT_APIKEY
+
+  postgres:
+    image: "postgres:13.6"
+    restart: always
+    networks:
+      - sumav-network
+    volumes:
+     - "./sumav_paper_graph.sql:/docker-entrypoint-initdb.d/sumav_paper_graph.sql"
+    environment:
+      - POSTGRES_USER=sumav
+      - POSTGRES_PASSWORD=sumav!@34
+    healthcheck:
+      test: pg_isready -U sumav
+    ports:
+      - "25432:5432"
+
+networks: 
+  sumav-network:
+    driver: bridge
